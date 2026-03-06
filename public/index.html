@@ -428,6 +428,7 @@
         <a href="/space/announcements">公告</a>
         <a href="/blog">博客</a>
         <a href="/chitchat">杂谈</a>
+        <a href="/ai/">AI助手</a>
         <button class="theme-toggle-btn" data-theme-toggle type="button" title="切换主题"></button>
         <a href="/admin.html" id="adminLink" style="display:none">管理</a>
         <div id="guestBtns">
@@ -449,6 +450,7 @@
     <h1 class="fade-in">NaBr406</h1>
     <div class="hero-actions fade-in">
       <a href="/space/" class="btn-hero btn-hero-primary">进入空间</a>
+      <a href="/ai/" class="btn-hero btn-hero-secondary">AI助手</a>
       <a href="https://github.com/NaBr406" target="_blank" class="btn-hero btn-hero-secondary">GitHub</a>
     </div>
   </section>
@@ -488,6 +490,16 @@
 
   <script src="/theme.js?v=2026030503"></script>
   <script>
+    try {
+      const currentToken = localStorage.getItem("token");
+      if (currentToken && !currentToken.startsWith("eyJ")) {
+        localStorage.setItem("ps_main_token", currentToken);
+      }
+      const psMainToken = localStorage.getItem("ps_main_token");
+      if (psMainToken && currentToken && currentToken.startsWith("eyJ")) {
+        localStorage.setItem("token", psMainToken);
+      }
+    } catch (e) {}
     const API = "/api";
     let captchaToken = "";
 
@@ -555,6 +567,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("ps_main_token", data.token);
         closeAuth(); showLoggedIn(data);
         showToast("欢迎回来，" + (data.nickname || data.username));
       } catch (err) { showToast(err.message); }
@@ -587,6 +600,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("ps_main_token", data.token);
         closeAuth(); showLoggedIn(data);
         showToast("注册成功，欢迎 " + (data.nickname || data.username));
       } catch (err) { showToast(err.message); refreshCaptcha(); }
@@ -596,6 +610,7 @@
       const token = localStorage.getItem("token");
       if (token) fetch(API + "/logout", { method: "POST", headers: { "Authorization": "Bearer " + token } }).catch(() => {});
       localStorage.removeItem("token");
+      localStorage.removeItem("ps_main_token");
       document.getElementById("guestBtns").style.display = "";
       document.getElementById("userBtns").style.display = "none";
       showToast("已退出登录");
