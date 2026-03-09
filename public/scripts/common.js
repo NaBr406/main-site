@@ -18,6 +18,15 @@
     showToast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
   }
 
+  document.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-menu-toggle]');
+    if (toggle) {
+      event.preventDefault();
+      toggleMenu();
+      return;
+    }
+  });
+
   document.querySelectorAll('.nav-links a').forEach((a) => {
     a.addEventListener('click', () => {
       const navLinks = document.getElementById('navLinks');

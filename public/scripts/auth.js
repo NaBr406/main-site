@@ -3,6 +3,7 @@
   const config = window.SiteHomeConfig || {};
   const syncMode = config.syncMainToken || 'none';
   let captchaToken = '';
+  let authMode = 'login';
 
   function toast(msg) {
     if (typeof window.showToast === 'function') window.showToast(msg);
@@ -38,16 +39,18 @@
   }
 
   function showAuth(mode) {
+    authMode = mode;
+    const submitBtn = document.getElementById('authSubmitBtn');
     document.getElementById('authTitle').textContent = mode === 'login' ? '登录' : '注册';
-    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '登录' : '注册';
-    document.getElementById('authSubmitBtn').onclick = mode === 'login' ? doLogin : doRegister;
+    submitBtn.textContent = mode === 'login' ? '登录' : '注册';
+    submitBtn.dataset.mode = mode;
     document.getElementById('inviteRow').style.display = mode === 'login' ? 'none' : 'block';
     document.getElementById('nicknameRow').style.display = mode === 'login' ? 'none' : 'block';
     document.getElementById('captchaRow').style.display = mode === 'register' ? 'flex' : 'none';
     if (mode === 'register') refreshCaptcha();
     document.getElementById('authSwitch').innerHTML = mode === 'login'
-      ? '没有账号？<a href="javascript:void(0)" onclick="showAuth(\'register\')">去注册</a>'
-      : '已有账号？<a href="javascript:void(0)" onclick="showAuth(\'login\')">去登录</a>';
+      ? '没有账号？<a href="javascript:void(0)" data-auth-open="register">去注册</a>'
+      : '已有账号？<a href="javascript:void(0)" data-auth-open="login">去登录</a>';
     document.getElementById('authModal').classList.add('show');
     document.getElementById('authUsername').value = '';
     document.getElementById('authPassword').value = '';
@@ -64,7 +67,6 @@
     const username = document.getElementById('authUsername').value.trim();
     const password = document.getElementById('authPassword').value.trim();
     if (!username || !password) return toast('请填写完整');
-
     try {
       const res = await fetch(API + '/login', {
         method: 'POST',
@@ -158,6 +160,37 @@
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeAuth();
+  });
+
+  document.addEventListener('click', (event) => {
+    const openBtn = event.target.closest('[data-auth-open]');
+    if (openBtn) {
+      event.preventDefault();
+      showAuth(openBtn.dataset.authOpen);
+      return;
+    }
+
+    const closeBtn = event.target.closest('[data-auth-close]');
+    if (closeBtn) {
+      event.preventDefault();
+      closeAuth();
+      return;
+    }
+
+    const refreshBtn = event.target.closest('[data-captcha-refresh]');
+    if (refreshBtn) {
+      event.preventDefault();
+      refreshCaptcha();
+      return;
+    }
+
+    const submitBtn = event.target.closest('#authSubmitBtn');
+    if (submitBtn) {
+      event.preventDefault();
+      const mode = submitBtn.dataset.mode || authMode;
+      if (mode === 'register') doRegister();
+      else doLogin();
+    }
   });
 
   window.showLoggedIn = showLoggedIn;

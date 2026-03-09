@@ -21,7 +21,7 @@
     <div class="nav-inner">
       <a href="/" class="nav-logo">NaBr406</a>
       <button class="theme-toggle-btn theme-toggle-mobile" data-theme-toggle type="button" title="切换主题"></button>
-      <button class="hamburger" onclick="toggleMenu()" aria-label="菜单"><span></span><span></span><span></span></button>
+      <button class="hamburger" data-menu-toggle aria-label="菜单"><span></span><span></span><span></span></button>
       <div class="nav-links" id="navLinks">
         <a href="/space/">空间</a>
         <a href="/space/announcements">公告</a>
@@ -31,8 +31,8 @@
         <button class="theme-toggle-btn" data-theme-toggle type="button" title="切换主题"></button>
         <a href="/admin.html" id="adminLink" style="display:none">管理</a>
         <div id="guestBtns">
-          <button class="btn-nav btn-login" onclick="showAuth('login')">登录</button>
-          <button class="btn-nav btn-register" onclick="showAuth('register')">注册</button>
+          <button class="btn-nav btn-login" data-auth-open="login">登录</button>
+          <button class="btn-nav btn-register" data-auth-open="register">注册</button>
         </div>
         <div id="userBtns" style="display:none" class="user-info">
           <img id="userAvatar" src="/default-avatar.png">
@@ -74,18 +74,18 @@
       <div id="captchaRow">
         <span id="captchaQuestion"></span>
         <input type="text" id="captchaInput" placeholder="答案" inputmode="numeric">
-        <button type="button" class="btn-sm" onclick="refreshCaptcha()">换一题</button>
+        <button type="button" class="btn-sm" data-captcha-refresh>换一题</button>
       </div>
       <div class="modal-actions">
-        <button class="btn-primary" id="authSubmitBtn" onclick="doLogin()">登录</button>
-        <button class="btn-secondary" onclick="closeAuth()">取消</button>
+        <button class="btn-primary" id="authSubmitBtn" type="button">登录</button>
+        <button class="btn-secondary" type="button" data-auth-close>取消</button>
       </div>
       <div class="auth-switch" id="authSwitch"></div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
-  <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+  <div class="menu-overlay" id="menuOverlay" data-menu-toggle></div>
 
   <script src="/theme.js?v=2026030503"></script>
   <script src="/scripts/common.js?v=2026030918"></script>
