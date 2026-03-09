@@ -1,1 +1,4 @@
 node_modules/
+public/*.bak*
+public/scripts/*.bak*
+public/styles/*.bak*
