@@ -290,11 +290,12 @@
     }
     .modal-overlay.show { display: flex; }
     .modal {
-      background: rgba(20,20,20,0.9);
+      background: rgba(255,255,255,0.96);
       backdrop-filter: blur(40px);
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 32px; width: 90%; max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
       animation: modalIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     @keyframes modalIn {
@@ -334,11 +335,12 @@
     .toast {
       position: fixed; bottom: 30px; left: 50%;
       transform: translateX(-50%) translateY(20px);
-      background: rgba(20,20,20,0.9);
+      background: rgba(255,255,255,0.94);
       backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
       color: var(--text);
       padding: 10px 24px; border-radius: 12px; font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
       opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 300;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
