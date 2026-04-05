@@ -17,7 +17,7 @@
         localStorage.setItem('ps_main_token', currentToken);
       }
 
-      if (psMainToken && currentToken && currentToken.startsWith('eyJ')) {
+      if (psMainToken && (!currentToken || currentToken.startsWith('eyJ'))) {
         localStorage.setItem('token', psMainToken);
       }
     } catch (e) {}
@@ -38,19 +38,20 @@
   }
 
   async function initLoginState() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ps_main_token') || ((localStorage.getItem('token') && !localStorage.getItem('token').startsWith('eyJ')) ? localStorage.getItem('token') : '');
     if (!token) return;
     try {
       const res = await fetch(API + '/me', { headers: { Authorization: 'Bearer ' + token } });
       if (!res.ok) {
-        localStorage.removeItem('token');
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('ps_main_token');
+        }
         return;
       }
       const user = await res.json();
       showLoggedIn(user);
-    } catch {
-      localStorage.removeItem('token');
-    }
+    } catch {}
   }
 
   function showLoggedIn(user) {
@@ -158,7 +159,7 @@
   }
 
   function doLogout() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ps_main_token') || ((localStorage.getItem('token') && !localStorage.getItem('token').startsWith('eyJ')) ? localStorage.getItem('token') : '');
     if (token) {
       fetch(API + '/logout', {
         method: 'POST',

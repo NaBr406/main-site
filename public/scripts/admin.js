@@ -19,8 +19,22 @@
     return d.innerHTML;
   }
 
+  function restoreMainToken() {
+    try {
+      const currentToken = localStorage.getItem('token');
+      const psMainToken = localStorage.getItem('ps_main_token');
+      if (psMainToken && (!currentToken || currentToken.startsWith('eyJ'))) {
+        localStorage.setItem('token', psMainToken);
+        return psMainToken;
+      }
+      return currentToken;
+    } catch {
+      return localStorage.getItem('token');
+    }
+  }
+
   async function init() {
-    const token = localStorage.getItem('token');
+    const token = restoreMainToken();
     if (!token) {
       document.getElementById('content').innerHTML = '<div class="no-access">请先<a href="/">登录</a>后访问</div>';
       return;
